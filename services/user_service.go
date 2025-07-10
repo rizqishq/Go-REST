@@ -7,6 +7,7 @@ import (
 
 	"github.com/rizqishq/Go-REST/models"
 	"github.com/rizqishq/Go-REST/repositories"
+	"github.com/rizqishq/Go-REST/utils"
 )
 
 type UserService struct {
@@ -54,7 +55,7 @@ func (s *UserService) CreateUser(ctx context.Context, req models.CreateUserReque
 	user := &models.User{
 		Username:  req.Username,
 		Email:     req.Email,
-		// Password:  utils.HashPassword(req.Password), --> TODO: Implement password hashing
+		Password:  utils.HashPassword(req.Password),
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
 		CreatedAt: now,
