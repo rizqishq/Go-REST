@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
 	"github.com/rizqishq/Go-REST/config"
+	"github.com/rizqishq/Go-REST/middleware"
 
 	"github.com/gorilla/mux"
 )
@@ -13,6 +15,9 @@ func main() {
 	cfg := config.LoadConfig()
 
 	router := mux.NewRouter()
+
+	router.Use(middleware.LoggingMiddleware)
+	router.Use(middleware.RecoveryMiddleware)
 
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
