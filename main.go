@@ -6,7 +6,10 @@ import (
 	"net/http"
 
 	"github.com/rizqishq/Go-REST/config"
+	"github.com/rizqishq/Go-REST/controllers"
 	"github.com/rizqishq/Go-REST/middleware"
+	"github.com/rizqishq/Go-REST/repositories"
+	"github.com/rizqishq/Go-REST/services"
 
 	"github.com/gorilla/mux"
 )
@@ -14,10 +17,18 @@ import (
 func main() {
 	cfg := config.LoadConfig()
 
-	router := mux.NewRouter()
+	router := mux.NewRouter().StrictSlash(true)
 
 	router.Use(middleware.LoggingMiddleware)
 	router.Use(middleware.RecoveryMiddleware)
+
+	apiRouter := router.PathPrefix("/api/v1").Subrouter()
+
+	userRepo := repositories.NewInMemoryUserRepository()
+	userService := services.NewUserService(userRepo)
+	userController := controllers.NewUserController(userService)
+
+	userController.RegisterRoutes(apiRouter)
 
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
