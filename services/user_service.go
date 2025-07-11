@@ -92,6 +92,9 @@ func (s *UserService) UpdateUser(ctx context.Context, id uint, req models.Update
 	if req.Email != "" {
 		user.Email = req.Email
 	}
+	if req.Password != "" {
+		user.Password = utils.HashPassword(req.Password)
+	}
 	if req.FirstName != "" {
 		user.FirstName = req.FirstName
 	}

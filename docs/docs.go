@@ -224,13 +224,6 @@ const docTemplate = `{
         },
         "models.CreateUserRequest": {
             "type": "object",
-            "required": [
-                "email",
-                "first_name",
-                "last_name",
-                "password",
-                "username"
-            ],
             "properties": {
                 "email": {
                     "type": "string"
@@ -242,13 +235,10 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
-                    "type": "string",
-                    "minLength": 8
+                    "type": "string"
                 },
                 "username": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 3
+                    "type": "string"
                 }
             }
         },
@@ -264,10 +254,11 @@ const docTemplate = `{
                 "last_name": {
                     "type": "string"
                 },
+                "password": {
+                    "type": "string"
+                },
                 "username": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 3
+                    "type": "string"
                 }
             }
         },

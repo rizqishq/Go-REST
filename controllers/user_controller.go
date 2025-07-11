@@ -83,8 +83,6 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// --> TODO: Add Validationn <--
-
 	user, err := c.userService.CreateUser(r.Context(), req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -117,12 +115,20 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	user, err := c.userService.UpdateUser(r.Context(), uint(id), req)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 	respondWithJSON(w, http.StatusOK, user)
 }
 
+// @Summary Delete a user
+// @Description Delete a user by ID
+// @Tags users
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 204 "No Content"
+// @Failure 404 {object} middleware.ErrorResponse
+// @Router /users/{id} [delete]
 func (c *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, err := strconv.ParseUint(idStr, 10, 32)
