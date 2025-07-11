@@ -17,6 +17,8 @@ func RecoveryMiddleware(next http.Handler) http.Handler {
 		defer func() {
 			if err := recover(); err != nil {
 				log.Printf("PANIC: %v\n%s", err, debug.Stack())
+
+				// Return a 500 error
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusInternalServerError)
 				json.NewEncoder(w).Encode(ErrorResponse{
@@ -25,6 +27,7 @@ func RecoveryMiddleware(next http.Handler) http.Handler {
 				})
 			}
 		}()
+
 		next.ServeHTTP(w, r)
 	})
 }

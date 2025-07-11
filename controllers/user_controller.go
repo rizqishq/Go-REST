@@ -29,6 +29,12 @@ func (c *UserController) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/users/{id:[0-9]+}", c.DeleteUser).Methods("DELETE")
 }
 
+// @Summary Get all users
+// @Description Get a list of all users
+// @Tags users
+// @Produce json
+// @Success 200 {array} models.UserResponse
+// @Router /users [get]
 func (c *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	users, err := c.userService.GetAllUsers(r.Context())
 	if err != nil {
@@ -38,6 +44,14 @@ func (c *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, users)
 }
 
+// @Summary Get a user by ID
+// @Description Get user details by ID
+// @Tags users
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {object} models.UserResponse
+// @Failure 404 {object} middleware.ErrorResponse
+// @Router /users/{id} [get]
 func (c *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, err := strconv.ParseUint(idStr, 10, 32)
@@ -53,6 +67,15 @@ func (c *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, user)
 }
 
+// @Summary Create a new user
+// @Description Create a new user with the input payload
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body models.CreateUserRequest true "User Data"
+// @Success 201 {object} models.UserResponse
+// @Failure 400 {object} middleware.ErrorResponse
+// @Router /users [post]
 func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var req models.CreateUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -70,6 +93,16 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusCreated, user)
 }
 
+// @Summary Update an existing user
+// @Description Update user data by ID
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Param user body models.UpdateUserRequest true "Updated data"
+// @Success 200 {object} models.UserResponse
+// @Failure 400 {object} middleware.ErrorResponse
+// @Router /users/{id} [put]
 func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, err := strconv.ParseUint(idStr, 10, 32)
